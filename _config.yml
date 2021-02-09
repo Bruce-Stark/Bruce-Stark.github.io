@@ -30,7 +30,7 @@ menu:
   - title: 归类
     url: /pages/categories.html
   - title: 仓库
-    url: "https://github.com/Bruce-Stark/bruce-stark.github.io.git"
+    url: 'https://github.com/Bruce-Stark/bruce-stark.github.io.git'
 
 # 点击页面文字冒出特效,不需要请设置为false
 extClickEffect: true
