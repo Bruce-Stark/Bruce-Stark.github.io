@@ -1,10 +1,10 @@
 encoding: utf-8
 
 # SEO相关信息
-title: TMaize Blog
-description: TMaize的个人博客
-keywords: TMaize,Blog,Java,Html,JavaScript
-author: TMaize
+title: Geekie Blog
+description: Stan的个人博客
+keywords: Stan,Blog,Java,Go,Linux,SQL
+author: Stan
 footerText: 'Copyright © 2016 皖ICP备16016174号'
 
 # 这些不要动
@@ -50,7 +50,7 @@ extAdsense: false
 extMTA: true
 
 # 百度收录自动推送,不需要请设置为false
-extBaidu: true
+extBaidu: false
 
 # 数学公式支持，比较影响加载速度,不需要请设置为false
 extMath: false
