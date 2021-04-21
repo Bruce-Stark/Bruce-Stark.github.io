@@ -3,7 +3,8 @@ layout: mypost
 title: 每天5分钟玩转Kubernetes勘误
 categories: [Kubernetes]
 ---
-# Chapter 1
+
+## Chapter 1
 
 #### 1.3 部署应用
 
@@ -23,7 +24,7 @@ kubectl create deployment kubernetes-bootcamp --image=docker.io/jocatalin/kubern
 
 
 
-# Chapter 4
+## Chapter 4
 
 #### 4.4 用例子把它们串起来
 
@@ -49,7 +50,7 @@ kubectl scale deployment/httpd-app --replicas=2
 
 
 
-# Chapter 5
+## Chapter 5
 
 #### 5.1.1 运行Deployment
 
