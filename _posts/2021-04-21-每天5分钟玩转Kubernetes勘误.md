@@ -4,7 +4,8 @@ title: 每天5分钟玩转Kubernetes勘误
 categories: [Kubernetes]
 ---
 
-## Chapter 1：先把Kubernetes跑起来
+
+# Chapter 1：先把Kubernetes跑起来
 
 #### 1.3 部署应用
 
@@ -159,3 +160,105 @@ spec:
 
 ---
 
+#### 5.2.3 运行自己的DaemonSet
+
+通过yml文件部署DaemonSet（node-exporter.yml）：
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: node-exporter-daemonset
+spec:
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      hostNetwork: true
+      containers:
+      - name: node-exporter
+        image: prom/node-exporter
+        imagePullPolicy: IfNotPresent
+        command:
+        - /bin/node_exporter
+        - --path.procfs
+        - /host/proc
+        - --path.sysfs
+        - /host/sys
+        - --collector.filesystem.ignored-mount-points
+        - ^/(sys|proc|dev|host|etc)($|/)
+        volumeMounts:
+        - name: proc
+          mountPath: /host/proc
+        - name: sys
+          mountPath: /host/sys
+        - name: root
+          mountPath: /rootfs
+      volumes:
+      - name: proc
+        hostPath:
+          path: /proc
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: root
+        hostPath:
+          path: /
+```
+
+* 问题：<font color=red>版本升级导致yaml语法变化</font>
+
+  ```shell
+  error: unable to recognize "node_exporter.yml": no matches for kind "DaemonSet" in version "extensions/v1beta1"
+  ```
+
+
+
+修改yaml文件为：
+
+```yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter-daemonset
+spec:
+  selector:
+    matchLabels:
+      app: node-exporter-daemonset
+  template:
+    metadata:
+      labels:
+        app: node-exporter-daemonset
+    spec:
+      hostNetwork: true
+      containers:
+      - name: node-exporter
+        image: prom/node-exporter
+        imagePullPolicy: IfNotPresent
+        command:
+        - /bin/node_exporter
+        - --path.procfs
+        - /host/proc
+        - --path.sysfs
+        - /host/sys
+        - --collector.filesystem.ignored-mount-points
+        - ^/(sys|proc|dev|host|etc)($|/)
+        volumeMounts:
+        - name: proc
+          mountPath: /host/proc
+        - name: sys
+          mountPath: /host/sys
+        - name: root
+          mountPath: /rootfs
+      volumes:
+      - name: proc
+        hostPath:
+          path: /proc
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: root
+        hostPath:
+          path: /
+```
