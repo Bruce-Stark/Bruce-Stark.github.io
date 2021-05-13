@@ -4,7 +4,7 @@ title: 每天5分钟玩转Kubernetes实战
 categories: [Kubernetes]
 ---
 
-## Chapter 1：先把Kubernetes跑起来
+### Chapter 1：先把Kubernetes跑起来
 
 #### 1.3 部署应用
 
@@ -44,7 +44,7 @@ kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/
 
 
 
-## Chapter 4：Kubernetes架构
+### Chapter 4：Kubernetes架构
 
 #### 4.4 用例子把它们串起来
 
@@ -56,7 +56,7 @@ kubectl scale deployment/httpd-app --replicas=2
 
 
 
-## Chapter 5：运行应用
+### Chapter 5：运行应用
 
 #### 5.1.1 运行Deployment
 
