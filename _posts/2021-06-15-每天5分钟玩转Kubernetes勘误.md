@@ -135,25 +135,25 @@ spec:
 
 在关闭node2后节点状态变为NotReady，与书上一致
 
-![image-20210421082828698](image-20210421082828698.png)
+![1](1.png)
 
 
 
 <font color=red>但node2上跑的pod状态并没有变成Unknown，也并没有在node1上重新创建新的pod</font>，与书上不一致
 
-![image-20210421083238907](image-20210421083238907.png)
+![2](2.png)
 
 
 
 并且在使用kubectl删除原部署并重新启动部署后，<font color=red>node2的pod无法正常删除</font>
 
-![image-20210421083550378](image-20210421083550378.png)
+![3](3.png)
 
 
 
 直到重启node2，才成功删除原pod
 
-![image-20210421084315390](image-20210421084315390.png)
+![4](4.png)
 
 
 
