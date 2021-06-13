@@ -1,14 +1,14 @@
 ---
 layout: mypost
 title: gRPC使用说明
-categories: [Go, Java]
+categories: [Go]
 ---
 
 Remote Produre Call(RPC) 即远程过程调用，像调用本地方法一样调用远程方法。其实 HTTP 接口也是 RPC 的一种，如果你再封装一层的话也能实现像调用本地方法一样。作为一个 Javaer，接触的最早的 RPC 框架是 Hessian，据说 JDK 自带的也有一个 RMI 也是 RPC 框架。
 
 ## gRPC
 
-为啥叫 gRPC，因为是 Google 主导开发的 RPC 框架，好在哪里呢
+为啥叫 gRPC，因为是 Google 主导开发的 RPC 框架
 
 1. 使用了 http2.0
 
