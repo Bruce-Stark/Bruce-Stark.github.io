@@ -431,5 +431,76 @@ spec:
 
 ## Chapter 8：Health Check
 
-#### 8.1 默认的健康检查
+#### 8.5 Health Check 在滚动更新中的应用
+
+```yaml
+apiVersion: app/v1beta1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  replicas: 10
+  template:
+    metadata:
+      labels:
+        run: app
+    spec:
+      containers:
+      - name: app
+        image: busybox
+        args:
+        - /bin/sh
+        - -c
+        - sleep 10; touch /tmp/healthy; sleep 30000
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/healthy
+            initialDelaySeconds: 10
+            periodSeconds: 5
+```
+
+* 问题：<font color=red>版本升级导致 yaml 语法变化</font>（同 5.1.3 Deployment 配置文件简介）
+
+```shell
+error: unable to recognize "app.v1.yml": no matches for kind "Deployment" in version "app/v1beta1"
+```
+
+
+
+修改 yaml 文件为：
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      run: app
+  template:
+    metadata:
+      labels:
+        run: app
+    spec:
+      containers:
+      - name: app
+        image: busybox
+        args:
+        - /bin/sh
+        - -c
+        - sleep 10; touch /tmp/healthy; sleep 30000
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/healthy
+          initialDelaySeconds: 10
+          periodSeconds: 5
+```
+
+
 

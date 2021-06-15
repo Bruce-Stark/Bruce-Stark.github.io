@@ -316,5 +316,243 @@ kubectl rollout undo deployment httpd --to-revision=1
 
 #### 8.1 默认的健康检查
 
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: healthcheck
+  name: healthcheck
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - name: healthcheck
+    image: busybox
+    args:
+    - /bin/sh
+    - -c
+    - sleep 10; exit 1
+```
+
+
+
+```shell
+kubectl get pod healthcheck
+```
+
+
+
+---
+
+#### 8.2 Liveness 探测
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: liveness
+  name: liveness
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - name: liveness
+    image: busybox
+    args:
+    - /bin/sh
+    - -c
+    - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600
+    livenessProbe:
+      exec:
+        command:
+        - cat
+        - /tmp/healthy
+      initialDelaySeconds: 10
+      periodSeconds: 5
+```
+
+
+
+```shell
+kubectl describe pod liveness
+
+kubectl get pod liveness
+```
+
+
+
+---
+
+#### Readiness 探测
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    test: readiness
+  name: readiness
+spec:
+  restartPolicy: OnFailure
+  containers:
+  - name: readiness
+    image: busybox
+    args:
+    - /bin/sh
+    - -c
+    - touch /tmp/healthy; sleep 30; rm -rf /tmp/healthy; sleep 600
+    readinessProbe:
+      exec:
+        command:
+        - cat
+        - /tmp/healthy
+      initialDelaySeconds: 10
+      periodSeconds: 5
+```
+
+
+
+```shell
+kubectl get pod readiness
+```
+
+
+
+---
+
+#### 8.4 Health Check 在 Scale Up 中的应用
+
+<font color=red>TODO：未能理解如何创建 MySQL 测试用例</font>
+
+
+
+---
+
+#### 8.5 Health Check 在滚动更新中的应用
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      run: app
+  template:
+    metadata:
+      labels:
+        run: app
+    spec:
+      containers:
+      - name: app
+        image: busybox
+        args:
+        - /bin/sh
+        - -c
+        - sleep 10; touch /tmp/healthy; sleep 30000
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/healthy
+          initialDelaySeconds: 10
+          periodSeconds: 5
+```
+
+
+
+```shell
+kubectl apply -f app.v1.yml --record
+
+kubectl get deployment app -owide
+```
+
+
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      run: app
+  template:
+    metadata:
+      labels:
+        run: app
+    spec:
+      containers:
+      - name: app
+        image: busybox
+        args:
+        - /bin/sh
+        - -c
+        - sleep 3000
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/healthy
+          initialDelaySeconds: 10
+          periodSeconds: 5
+```
+
+
+
+```shell
+kubectl apply -f app.v2.yml --record
+
+kubectl get deployment app -owide
+
+kubectl describe deployment app
+
+kubectl rollout history deployment app
+
+kubectl rollout undo deployment app --to-revision=1  # 回滚
+```
+
+
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 35%
+      maxUnavailable: 35%
+  replicas: 10
+  selector:
+    matchLabels:
+      run: app
+  template:
+    metadata:
+      labels:
+        run: app
+    spec:
+      containers:
+      - name: app
+        image: busybox
+        args:
+        - /bin/sh
+        - -c
+        - sleep 3000
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/healthy
+          initialDelaySeconds: 10
+          periodSeconds: 5
+```
+
+
 
 
